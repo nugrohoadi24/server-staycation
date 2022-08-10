@@ -1,0 +1,64 @@
+Latihan web staycation
+
+Schema Homepage
+
+category : {
+	name: string,
+}
+
+image : {
+	image_url:string,
+	
+}
+
+item : {
+	title: string,
+	price: number,	
+	country: string,
+	city: string,
+	isPopular: boolean,
+	description:string,
+	image:[{_id: objectId,]},
+	featureId: [{_id: objectId}],
+	activityId: [{_id:objectId }]
+}
+
+feature : {
+	name: string,
+	qty: number,
+	image_url: string
+}
+
+activity: {
+	name:string,
+	type: string,
+	image_url: string,
+	isPopular: boolean,
+}
+
+booking: {
+	start_date:date,
+	end_date:date,
+	itemId: [{ 
+		_id:objectId,
+		price:number,
+		night: number, 
+	}],
+	memberId: [{_id:objectId}],
+	bankId: [{ _id: objectId }],
+	proofPayment: string,
+	bankFrom: string,
+	accountHolder: string
+}
+
+member: {
+	name: string,
+	email: string,
+	phone: string
+}
+
+bank: {
+	name_bank: string,
+	number_rekening: string,
+	name: string,
+}
