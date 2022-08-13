@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const featureSchema = new Schema({
@@ -16,4 +16,4 @@ const featureSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('Feature', featureSchema)
+module.exports = mongoose.model('Feature', featureSchema);
