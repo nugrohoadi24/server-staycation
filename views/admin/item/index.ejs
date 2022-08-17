@@ -21,12 +21,19 @@
       <!-- Begin Page Content -->
       <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Item</h1>
+        <% if(action == 'view') { %> 
+          <!-- Page Heading -->
+          <h1 class="h3 mb-4 text-gray-800">Item</h1>
 
-        <!-- Data Table -->
-        <%- include('./table.ejs') %>
-
+          <%- include('./table.ejs') %>
+          <%- include('./add_modal.ejs') %>
+          <%- include('./edit_modal.ejs')  %> 
+        <% } else if (action == 'image') { %> 
+          <!-- Page Heading -->
+          <h1 class="h3 mb-4 text-gray-800">Detail</h1>
+          
+          <%- include('./show_detail.ejs') %>
+        <% } %> 
       </div>
       <!-- /.container-fluid -->
 
@@ -67,8 +74,25 @@
   </div>
 </div>
 
-<%- include('../../components/script.ejs') %>
+  <%- include('../../components/script.ejs') %>
 
 </body>
+
+<script>
+  $('#dataTable').on('click', '.btn-edit', function() {
+    let id = $(this).data('id');
+    let title = $(this).data('title');
+    let price = $(this).data('price');
+    let city = $(this).data('city');
+    let description = $(this).data('description');
+
+    $('#edit_modal').modal('show');
+    $('#id').val(id);
+    $('.title').val(title);
+    $('.price').val(price);
+    $('.city').val(city);
+    $('.description').val(description);
+  })
+</script>
 
 </html>

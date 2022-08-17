@@ -1,0 +1,38 @@
+  <!-- Modal -->
+  <div class="modal fade" id="edit_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Bank</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/bank?_method=PUT" method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                  <label>Name Bank</label>
+                  <input type="text" id="name_bank" name="name_bank" class="form-control name_bank" required>
+                </div>
+                <div class="form-group">
+                  <label>No Rekening</label>
+                  <input type="text" id="rekening" name="rekening" class="form-control rekening" required>
+                </div>
+                <div class="form-group">
+                  <label>Name Account</label>
+                  <input type="text" id="name_account" name="name_account" class="form-control name_account" required>
+                </div>
+                <div class="form-group">
+                  <label>Image</label>
+                  <input type="file" id="image" name="image" class="form-control" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="id" name="id" class="form-control">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>

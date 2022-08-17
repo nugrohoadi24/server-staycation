@@ -1,0 +1,50 @@
+<!-- Modal -->
+<div class="modal fade" id="add_modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/item" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Price</label>
+                <input type="number" id="price" name="price" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="city" name="city" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select name="categoryId" class="form-control">
+                  <option value="">-- Choose Category --</option>
+                  <% for(let i = 0; i < category.length; i++) { %> 
+                    <option value="<%= category[i].id %>"><%= category[i].name %></option>
+                  <% } %> 
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" name="description" class="form-control"></textarea>
+              </div>                            
+              <div class="form-group">
+                <label>Image</label>
+                <input type="file" id="image" name="image" class="form-control" multiple required>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

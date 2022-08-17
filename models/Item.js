@@ -8,11 +8,11 @@ const itemSchema = new Schema({
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     country: {
-        type: Number,
+        type: String,
         default: 'Indonesia'
     },
     city: {
@@ -20,21 +20,26 @@ const itemSchema = new Schema({
         required: true
     },
     isPopular: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     description: {
         type: String,
         required: true
     },
-    image: [{
+    categoryId: {
+        type: ObjectId,
+        ref: 'Category'
+    },
+    imageId: [{
         type: ObjectId,
         ref: 'Image'
     }],
-    feature: [{
+    featureId: [{
         type: ObjectId,
         ref: 'Feature'
     }],
-    activity: [{
+    activityId: [{
         type: ObjectId,
         ref: 'Activity'
     }],
