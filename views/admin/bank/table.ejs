@@ -29,7 +29,7 @@
               <td><%= bank[i].rekening %> </td>
               <td><%= bank[i].name_account %> </td>
               <td>
-                <img src="<%= bank[i].img_url %> " alt="<%= bank[i].name_bank %> " height="35px" width="35px">
+                <img src="<%= bank[i].img_url %> " alt="<%= bank[i].name_bank %>" height="35px" width="35px">
               </td>
               <td>
                 <form action="/bank/<%= bank[i].id %>?_method=DELETE" method="POST">

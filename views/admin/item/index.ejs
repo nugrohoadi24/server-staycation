@@ -26,13 +26,10 @@
           <h1 class="h3 mb-4 text-gray-800">Item</h1>
 
           <%- include('./table.ejs') %>
-          <%- include('./add_modal.ejs') %>
-          <%- include('./edit_modal.ejs')  %> 
-        <% } else if (action == 'image') { %> 
-          <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">Detail</h1>
-          
-          <%- include('./show_detail.ejs') %>
+          <%- include('./modal/add_modal.ejs') %>
+          <%- include('./modal/edit_modal.ejs')  %> 
+        <% } else if (action == 'image') { %>
+          <%- include('./view_detail.ejs') %>
         <% } %> 
       </div>
       <!-- /.container-fluid -->
@@ -92,6 +89,28 @@
     $('.price').val(price);
     $('.city').val(city);
     $('.description').val(description);
+  })
+
+  $('#dataTableFeature').on('click', '.btn-edit-feature', function() {
+    let id = $(this).data('id');
+    let name = $(this).data('name');
+    let qty = $(this).data('qty');
+
+    $('#edit_modal_feature').modal('show');
+    $('#id').val(id);
+    $('.name_feature').val(name);
+    $('.qty').val(qty);
+  })
+
+  $('#dataTableActivity').on('click', '.btn-edit-activity', function() {
+    let id = $(this).data('id');
+    let name = $(this).data('name');
+    let type = $(this).data('type');
+
+    $('#edit_modal_activity').modal('show');
+    $('#id').val(id);
+    $('.name_activity').val(name);
+    $('.type').val(type);
   })
 </script>
 

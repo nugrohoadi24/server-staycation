@@ -1,0 +1,25 @@
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Detail</button>
+      <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#feature" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Feature</button>
+      <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#activity" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Activity</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <%- include('./show_detail.ejs')  %> 
+    <%- include('./show_feature.ejs') %> 
+    <%- include('./show_activity.ejs') %> 
+</div>
+
+<%- include('./modal/edit_modal_feature.ejs') %>
+<%- include('./modal/edit_modal_activity.ejs') %>
+
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTableActivity').DataTable();
+    });
+    $(document).ready(function () {
+        $('#dataTableFeature').DataTable();
+    });
+</script>

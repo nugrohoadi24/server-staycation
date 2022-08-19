@@ -17,6 +17,7 @@ const activitySchema = new Schema({
     },
     isPopular: {
         type: Boolean,
+        default: false
     },
     itemId: {
         type: ObjectId,

@@ -1,6 +1,8 @@
 const Category = require('../models/Category');
 const Bank = require('../models/Bank');
 const Item = require('../models/Item');
+const Feature = require('../models/Feature');
+const Activity = require('../models/Activity');
 const Image = require('../models/Image');
 const fs = require('fs-extra');
 const path = require('path');
@@ -118,14 +120,14 @@ module.exports = {
     },
     viewItem: async (req, res) => {
         try {
-            const item = await Item.find()
+            let item = await Item.find()
                 .populate({ path:'imageId', select:'id img_url' })
                 .populate({ path:'categoryId', select:'id name' });
             const category = await Category.find();
 
             res.render('admin/item', {
                 title: 'Staycation | Item',
-                category, 
+                category,
                 item,
                 action: 'view'
             });
@@ -173,7 +175,7 @@ module.exports = {
                 .populate({ path:'categoryId', select:'id name' });
 
             res.render('admin/item', {
-                title: 'Staycation | Item',
+                title: 'Staycation | Detail Item',
                 item,
                 action: 'image'
             });
@@ -228,9 +230,19 @@ module.exports = {
     },
     deleteItem: async (req, res) => {
         try {
-            const { id } = req.params;
-            console.log('id', id)
-            const item = await Item.findOne({ _id:id }).populate('imageId');
+            const { id, categoryId } = req.params;
+            const item = await Item.findOne({ _id:id })
+                .populate('imageId');
+
+            const category = await Category.findOne({ _id:categoryId })
+                .populate('itemId');
+
+            for(let i=0; i < category.itemId.length; i++){
+                if(category.itemId[i]._id.toString() == id){
+                    category.itemId.pull({ _id:id });
+                    await category.save();
+                }
+            }
 
             for(let i = 0; i < item.imageId.length; i++) {
                 const imageDelete = await Image.findOne({_id:item.imageId[i]._id});
@@ -240,19 +252,166 @@ module.exports = {
             }
             await item.remove();
 
-            // const categoryId = item.categoryId;
-            // const deleteItemCategory = await Category.findOne({ _id:categoryId });
-            // deleteItemCategory.itemId.forEach( itemId => {
-            //     if(itemId == id){
-            //         deleteItemCategory.remove();
-            //         console.log('sama', itemId + ' --- ' + id);
-            //     }
-            // });
-
             res.redirect('/item');
         } catch (error) {
             console.log(error)
             res.redirect('/item');
+        }
+    },
+    showDetailItem: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const item = await Item.findOne({ _id:id })
+                .populate({ path:'imageId', select:'id img_url' })
+                .populate({ path:'categoryId', select:'id name' });
+            const feature = await Feature.find({ itemId:id });
+            const activity = await Activity.find({ activityId:id });
+
+            res.render('admin/item', {
+                title: 'Staycation | Detail Item',
+                item,
+                id,
+                feature,
+                activity,
+                action: 'image'
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    addFeature: async (req, res) => {
+        const { name, qty, itemId } = req.body;
+        try {
+            const feature = await Feature.create({ 
+                name, 
+                qty, 
+                itemId,
+                img_url: `images/${req.file.filename}` 
+            });
+
+            const item = await Item.findOne({ _id:itemId });
+            item.featureId.push({_id: feature._id});
+            await item.save();
+
+            res.redirect(`/item/${itemId}`);
+        } catch (error) {
+            res.redirect(`/item/${itemId}`);
+        }
+    },
+    editFeature: async (req, res) => {
+        try {
+            const { id, itemId, name, qty } = req.body;
+            const feature = await Feature.findOne({ itemId:itemId });
+
+            if(req.file == undefined){
+                feature.name = name;
+                feature.qty = qty;
+
+                await feature.save();
+                res.redirect(`/item/${itemId}`);
+            } else {
+                await fs.unlink(path.join(`public/${feature.img_url}`));
+                feature.name = name;
+                feature.qty = qty;
+                feature.img_url = `images/${req.file.filename}`;
+
+                await feature.save();
+                res.redirect(`/item/${itemId}`);
+            }
+        } catch (error) {
+            res.redirect(`/item/${itemId}`);
+        }
+    },
+    deleteFeature: async (req, res) => {
+        const { itemId, id } = req.params;
+
+        try {
+            const feature = await Feature.findOne({ _id:id });
+            const item = await Item.findOne({ _id:itemId })
+                .populate('featureId');
+
+            for(let i=0; i < item.featureId.length; i++){
+                if(item.featureId[i]._id.toString() == feature._id.toString()){
+                    item.featureId.pull({ _id:feature._id });
+                    await item.save()
+                }
+            }
+            await fs.unlink(path.join(`public/${feature.img_url}`));
+            await feature.remove();
+            
+            res.redirect(`/item/${itemId}`);
+        } catch (error) {
+            res.redirect(`/item/${itemId}`);
+        }
+    },
+    addActivity: async (req, res) => {
+        const { name, type, itemId } = req.body;
+        console.log('body', name + type + itemId)
+        try {
+            const activity = await Activity.create({ 
+                name, 
+                type, 
+                itemId,
+                img_url: `images/${req.file.filename}` 
+            });
+            console.log('act', activity);
+
+            const item = await Item.findOne({ _id:itemId });
+            item.activityId.push({_id: activity._id});
+            await item.save();
+            console.log('item', item);
+
+            res.redirect(`/item/${itemId}`);
+        } catch (error) {
+            console.log(error)
+            res.redirect(`/item/${itemId}`);
+        }
+    },
+    editActivity: async (req, res) => {
+        try {
+            const { id, itemId, name, type } = req.body;
+            const activity = await Activity.findOne({ itemId:itemId });
+
+            if(req.file == undefined){
+                activity.name = name;
+                activity.type = type;
+
+                await activity.save();
+                res.redirect(`/item/${itemId}`);
+            } else {
+                await fs.unlink(path.join(`public/${activity.img_url}`));
+                activity.name = name;
+                activity.type = type;
+                activity.img_url = `images/${req.file.filename}`;
+
+                await activity.save();
+                res.redirect(`/item/${itemId}`);
+            }
+        } catch (error) {
+            res.redirect(`/item/${itemId}`);
+        }
+    },
+    deleteActivity: async (req, res) => {
+        const { itemId, id } = req.params;
+        console.log('item', itemId + '= id =' + id)
+
+        try {
+            const activity = await Activity.findOne({ _id:id });
+            const item = await Item.findOne({ _id:itemId })
+                .populate('activityId');
+
+            for(let i=0; i < item.activityId.length; i++){
+                if(item.activityId[i]._id.toString() == activity._id.toString()){
+                    item.activityId.pull({ _id:activity._id });
+                    await item.save()
+                }
+            }
+            await fs.unlink(path.join(`public/${activity.img_url}`));
+            await activity.remove();
+            
+            res.redirect(`/item/${itemId}`);
+        } catch (error) {
+            res.redirect(`/item/${itemId}`);
         }
     },
     viewBooking: (req, res) => {
