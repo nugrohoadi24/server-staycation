@@ -1,30 +1,167 @@
+const User = require('../models/User');
 const Category = require('../models/Category');
 const Bank = require('../models/Bank');
 const Item = require('../models/Item');
 const Feature = require('../models/Feature');
 const Activity = require('../models/Activity');
+const Booking = require('../models/Booking');
+const Member = require('../models/Member');
 const Image = require('../models/Image');
 const fs = require('fs-extra');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
-    viewDashboard: (req, res) => {
-        res.render('/', {
-            title: 'Staycation | Dashboard'
-        });
+    viewSignIn: async (req, res) => {
+        try {
+            if(req.session.user == null || req.session.user == undefined){
+                res.render('index', {        
+                    title: 'Staycation | Login'
+                });
+            } else {
+                res.redirect('/dashboard');
+            }
+            
+        } catch (error) {
+            res.redirect('/login');
+        }
     },
+    login: async (req, res) => {
+        try {
+            const { username, password } = req.body;
+            const user = await User.findOne({ username:username });
+            if(!user){
+                console.log('kosong');
+                res.redirect('/login');
+            };
 
+            const isPasswordMatch = await bcrypt.compare(password, user.password);
+            if(!isPasswordMatch){
+                console.log('ga cocok');
+                res.redirect('/login');
+            };
+
+            req.session.user = {
+                id: user.id,
+                username: user.username
+            };
+            res.redirect('/dashboard')
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    logout: async (req, res) => {
+        req.session.destroy();
+        res.redirect('/login');
+    },
+    viewDashboard: async (req, res) => {
+        try {
+            const member = await Member.find();
+            const booking = await Booking.find();
+            const item = await Item.find();
+
+            res.render('admin/dashboard', {
+                title: 'Staycation | Dashboard',
+                member,
+                booking,
+                item,
+                userLogin: req.session.user
+            });
+        } catch (error) {
+            console.log(error);
+            res.redirect('/dashboard');
+        }
+    },
+    viewUser: async (req, res) => {
+        try {
+            const user = await User.find();
+
+            user.forEach( item => {
+                if(item.role == 1){
+                    item.role = 'Viewer';
+                } else if(item.role == 2){
+                    item.role = 'Editor';
+                } else if(item.role == 3){
+                    item.role = 'Tester';
+                } else if(item.role == 4){
+                    item.role = 'Admin';
+                } else if(item.role == 5){
+                    item.role = 'Super Admin';
+                }
+            })
+            
+            res.render('admin/user', {
+                title: 'Staycation | User',
+                user,
+                userLogin: req.session.user
+            });
+        } catch (error) {
+            res.redirect('/user');
+        }
+    },
+    addUser: async (req, res) => {
+        try {
+            const { name, username, password, confirmPassword, role } = req.body;
+
+            if(password === confirmPassword) {
+                await User.create({ 
+                    name, 
+                    username, 
+                    password, 
+                    role
+                });
+            } else {
+                console.log('ga sama')
+            }
+            res.redirect('/user');
+        } catch (error) {
+            res.redirect('/user');
+        }
+    },
+    editUser: async (req, res) => {
+        const { id, name, username, password, confirmPassword, role } = req.body;
+        
+        try {
+            const user = await User.findOne({ _id:id });
+
+            if(password === confirmPassword) {
+                user.name = name;
+                user.username = username;
+                user.password = password;
+                user.role = role
+
+                await user.save();
+
+                res.redirect('/user');
+            } else {
+                res.redirect('/');
+            }
+        } catch (error) {
+            res.redirect('/user');
+        }
+    },
+    deleteUser: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const user = await User.findOne({ _id:id });
+            await user.remove();
+            
+            res.redirect('/user');
+        } catch (error) {
+            res.redirect('/user');
+        }
+    },
     viewCategory: async (req, res) => {
         try {
             const category = await Category.find();
             res.render('admin/category', {
+                title: 'Staycation | Category',
                 category,
-                title: 'Staycation | Category'
+                userLogin: req.session.user
             });
         } catch (error) {
             res.redirect('/category');
         }
-        
     },
     addCategory: async (req, res) => {
         try {
@@ -56,13 +193,13 @@ module.exports = {
             res.redirect('/category');
         }
     },
-
     viewBank: async (req, res) => {
         try {
             const bank = await Bank.find();
             res.render('admin/bank', {
+                title: 'Staycation | Bank',
                 bank,
-                title: 'Staycation | Bank'
+                userLogin: req.session.user
             });
         } catch (error) {
             res.redirect('/bank');
@@ -129,7 +266,8 @@ module.exports = {
                 title: 'Staycation | Item',
                 category,
                 item,
-                action: 'view'
+                action: 'view',
+                userLogin: req.session.user
             });
         } catch (error) {
             res.redirect('/item');
@@ -164,23 +302,6 @@ module.exports = {
         } catch (error) {
             console.log('err',error)
             res.redirect('/item');
-        }
-    },
-    showDetailItem: async (req, res) => {
-        try {
-            const { id } = req.params;
-            console.log('id', id)
-            const item = await Item.findOne({ _id:id })
-                .populate({ path:'imageId', select:'id img_url' })
-                .populate({ path:'categoryId', select:'id name' });
-
-            res.render('admin/item', {
-                title: 'Staycation | Detail Item',
-                item,
-                action: 'image'
-            });
-        } catch (error) {
-            console.log(error)
         }
     },
     editItem: async (req, res) => {
@@ -273,7 +394,8 @@ module.exports = {
                 id,
                 feature,
                 activity,
-                action: 'image'
+                action: 'image',
+                userLogin: req.session.user
             });
         } catch (error) {
             console.log(error)
@@ -414,9 +536,64 @@ module.exports = {
             res.redirect(`/item/${itemId}`);
         }
     },
-    viewBooking: (req, res) => {
-        res.render('admin/booking', {
-            title: 'Staycation | Booking'
-        });
-    },   
+    viewBooking: async (req, res) => {
+        try {
+            const booking = await Booking.find()
+                .populate('memberId')
+                .populate('bankId')
+
+            console.log('book',booking)
+            res.render('admin/booking', {
+                title: 'Staycation | Booking',
+                booking,
+                action: 'View',
+                userLogin: req.session.user
+            });
+        } catch (error) {
+            res.redirect('/booking');
+        }
+    },
+    showDetailBooking: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const booking = await Booking.findOne({ _id:id })
+                .populate({ path:'bankId' })
+                .populate({ path:'memberId' });
+
+            res.render('admin/booking', {
+                title: 'Staycation | Detail Booking',
+                booking,
+                action: 'Detail',
+                userLogin: req.session.user
+            });
+        } catch (error) {
+            res.redirect('/booking');
+        }
+    },
+    actionConfirmation: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const booking = await Booking.findOne({ _id:id });
+            booking.payment.status = 'Accept';
+            booking.save();
+
+            res.redirect(`/booking/${id}`);
+        } catch (error) {
+            console.log(error);
+            res.redirect(`/booking/${id}`);
+        }
+    },
+    rejectConfirmation: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const booking = await Booking.findOne({ _id:id });
+            booking.payment.status = 'Reject';
+            booking.save();
+
+            res.redirect(`/booking/${id}`);
+        } catch (error) {
+            console.log(error);
+            res.redirect(`/booking/${id}`);
+        }
+    }
 }

@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 
 // ROUTER
 const adminRouter = require('./routes/admin');
+const apiRouter = require('./routes/api');
 
 //CONNECTION MONGOOSE
 const mongoose = require('mongoose');
@@ -23,12 +24,15 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
+
+// Use session middleware
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { maxAge: 60000 }
 }));
+
 app.use(flash());
 
 app.use(logger('dev'));
@@ -41,6 +45,7 @@ app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbo
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', adminRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

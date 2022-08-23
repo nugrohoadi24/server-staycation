@@ -1,0 +1,59 @@
+<div class="card shadow">
+  <div class="card-header d-flex justify-content-between py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Detail</h6>
+  </div>
+  <div class="card-body row align-items-center">
+    <div class="col-md-8">
+      <div class="mb-2">
+        <h5><strong>Invoice</strong> : <%= booking.invoice %> </h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Nama Member</strong> : <%= booking.memberId.name %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Email Member</strong> : <%= booking.memberId.email %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Nama Item</strong> : <%= booking.itemId.title %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Tanggal Mulai</strong> : <%= booking.start_date.toLocaleString() %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Tanggal Berakhir</strong> : <%= booking.end_date.toLocaleString() %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Bank</strong> : <%= booking.payment.bank_from %></h5>
+      </div>
+      <div class="mb-2">
+        <h5><strong>Status</strong> : <%= booking.payment.status %></h5>
+      </div>
+      <% if(booking.payment.status == 'Proses') { %> 
+      <hr>
+      <h5>Ubah Status</h5>
+      <div class="d-flex">
+          <form action="/booking/confirm/<%= booking.id %>?_method=PUT" method="POST" class="mr-3">
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-check"></i>
+              Konfirmasi
+            </button>
+          </form>
+          <form action="/booking/reject/<%= booking.id %>?_method=PUT" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-times"></i>
+              Reject
+            </button>
+          </form>
+      </div>
+      <% } %> 
+    </div>
+    <div class="col-md-4">
+      <img src="http://localhost:3000/<%= booking.payment.proofPayment  %>" alt="Bukti Pembayaran" class="d-block w-75 m-0" >
+    </div>
+  </div>
+  <div class="card-footer py-3 text-right">
+    <a class="btn btn-primary w-100" href="/item">
+       Back
+    </a>
+  </div>
+</div>

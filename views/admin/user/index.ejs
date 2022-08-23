@@ -21,7 +21,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">Bank</h1>
+          <h1 class="h3 mb-4 text-gray-800">User</h1>
 
           <!-- Data Table -->
           <%- include('./table.ejs') %>
@@ -75,15 +75,13 @@
 <script>
   $('#dataTable').on('click', '.btn-edit', function() {
     let id = $(this).data('id');
-    let name_bank = $(this).data('name_bank');
-    let rekening = $(this).data('rekening');
-    let name_account = $(this).data('name_account');
+    let name = $(this).data('name');
+    let username = $(this).data('username');
 
     $('#edit_modal').modal('show');
     $('#id').val(id);
-    $('.name_bank').val(name_bank);
-    $('.rekening').val(rekening);
-    $('.name_account').val(name_account);
+    $('.name').val(name);
+    $('.username').val(username);
   })
 </script>
 

@@ -17,6 +17,23 @@
               <th>Action</th>
             </tr>
           </thead>
+          <tbody>
+            <% for(let i = 0; i < booking.length; i++) { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><%= booking[i].itemId.title %></td>
+                <td><%= booking[i].memberId.name %></td>
+                <td><%= booking[i].bankId.name_bank %></td>
+                <td><%= booking[i].start_date.toLocaleString().split(',')[0] %> s/d <%= booking[i].end_date.toLocaleString().split(',')[0] %></td>
+                <td><%= booking[i].payment.status %></td>
+                <td>
+                    <a href="/booking/<%= booking[i]._id %>" class="btn btn-info btn-edit">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                </td>
+              </tr>
+              <% } %>  
+          </tbody>
           <tfoot>
             <tr>
               <th>No</th>

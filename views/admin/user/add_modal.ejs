@@ -1,0 +1,48 @@
+  <!-- Modal -->
+  <div class="modal fade" id="add_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Admin</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/user" method="post">
+            <div class="modal-body">
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Username</label>
+                  <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input type="password" id="password" name="password" minlength="8" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Confirm Password</label>
+                  <input type="password" id="confirmPassword" name="confirmPassword" minlength="8" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Role</label>
+                  <select name="role" class="form-control" required>
+                    <option value="">-- Choose Role --</option>
+                      <option value=1>Viewer</option>
+                      <option value=2>Editor</option>
+                      <option value=3>Tester</option>
+                      <option value=4>Admin</option>
+                      <option value=5>Super Admin</option>
+                  </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>

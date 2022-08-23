@@ -1,0 +1,61 @@
+ <!-- DataTales Example -->
+ <div class="card shadow mb-4">
+    <div class="card-header d-flex justify-content-between py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Data User</h6>
+
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_modal">
+        <i class="fas fa-plus"></i>  Add User
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Username</th>
+              <th>Level</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i = 0; i < user.length; i++) { %>
+            <tr>
+              <td><%= i + 1 %> </td>
+              <td><%= user[i].name %></td>
+              <td><%= user[i].username %></td>
+              <td><%= user[i].role %></td>
+              <td>
+                <form action="/user/<%= user[i].id %>?_method=DELETE" method="POST">
+                  <a 
+                    href="javascript:void()"
+                    class="btn btn-warning btn-edit" 
+                    data-id="<%= user[i].id %>" 
+                    data-name="<%= user[i].name %>"
+                    data-username="<%= user[i].username %>"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% } %>  
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Username</th>
+              <th>Level</th>
+              <th>Action</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+</div>
