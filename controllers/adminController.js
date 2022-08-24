@@ -539,8 +539,7 @@ module.exports = {
     viewBooking: async (req, res) => {
         try {
             const booking = await Booking.find()
-                .populate('memberId')
-                .populate('bankId')
+                .populate('memberId');
 
             console.log('book',booking)
             res.render('admin/booking', {
@@ -557,7 +556,6 @@ module.exports = {
         const { id } = req.params;
         try {
             const booking = await Booking.findOne({ _id:id })
-                .populate({ path:'bankId' })
                 .populate({ path:'memberId' });
 
             res.render('admin/booking', {

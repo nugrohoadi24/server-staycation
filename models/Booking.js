@@ -25,10 +25,6 @@ const bookingSchema = new Schema({
         type: ObjectId,
         ref: 'Member'
     },
-    bankId: {
-        type: ObjectId,
-        ref: 'Bank'
-    },
     start_date: {
         type: Date,
         required: true
@@ -60,7 +56,7 @@ const bookingSchema = new Schema({
         },
         status: {
             type: String,
-            required: true
+            default:'Proses'
         }
     },
 })

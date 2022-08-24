@@ -23,9 +23,6 @@
         <h5><strong>Tanggal Berakhir</strong> : <%= booking.end_date.toLocaleString() %></h5>
       </div>
       <div class="mb-2">
-        <h5><strong>Bank</strong> : <%= booking.payment.bank_from %></h5>
-      </div>
-      <div class="mb-2">
         <h5><strong>Status</strong> : <%= booking.payment.status %></h5>
       </div>
       <% if(booking.payment.status == 'Proses') { %> 
@@ -52,7 +49,7 @@
     </div>
   </div>
   <div class="card-footer py-3 text-right">
-    <a class="btn btn-primary w-100" href="/item">
+    <a class="btn btn-primary w-100" href="/booking">
        Back
     </a>
   </div>

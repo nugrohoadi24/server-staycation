@@ -27,6 +27,10 @@ const itemSchema = new Schema({
         type: String,
         required: true
     },
+    sumBooking: {
+        type: Number,
+        default:0
+    },
     categoryId: {
         type: ObjectId,
         ref: 'Category'
