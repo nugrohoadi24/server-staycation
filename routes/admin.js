@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const adminController = require('../controllers/adminController');
 const { upload, uploadMultiple } = require('../middleware/multer');
-// const auth = require('../middleware/auth');
+const auth = require('../middleware/auth');
 
 router.get('/login', adminController.viewSignIn);
 router.post('/login', adminController.login);
 router.get('/logout', adminController.logout);
+
+router.use(auth);
 
 router.get('/dashboard', adminController.viewDashboard);
 
@@ -42,7 +44,5 @@ router.get('/booking', adminController.viewBooking);
 router.get('/booking/:id', adminController.showDetailBooking);
 router.put('/booking/confirm/:id', adminController.actionConfirmation);
 router.put('/booking/reject/:id', adminController.rejectConfirmation);
-
-// router.use(auth);
 
 module.exports = router;

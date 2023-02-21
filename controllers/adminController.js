@@ -20,7 +20,7 @@ module.exports = {
                 });
             } else {
                 res.redirect('/dashboard');
-            }
+            } 
             
         } catch (error) {
             res.redirect('/login');
